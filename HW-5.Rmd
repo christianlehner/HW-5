@@ -1,6 +1,6 @@
 ---
 title: "MATH 216 Homework 5"
-author: "WRITE YOUR NAME HERE"
+author: "Christian Lehner"
 output: html_document
 ---
 
@@ -9,10 +9,10 @@ output: html_document
 
 Please indicate
 
-* Who you collaborated with:
-* Roughly how much time you spent on this HW:
-* What gave you the most trouble:
-* Any comments you have: 
+* Who you collaborated with:Phil Hoxie
+* Roughly how much time you spent on this HW: 6
+* What gave you the most trouble: Phil's Humor / Creating the Shiny App
+* Any comments you have: How long will we have access to our middlebury shiny server?
 
 
 
@@ -28,7 +28,7 @@ a "single-file" Shiny app based on file `App.R`
 * Install all necessary packages on your Middlebury Shiny server account
 following the instructions given in Lec16 Shiny.
 * Upload your app to the Middlebury Shiny server and replace the NHL link with
-the link for your app [here](https://www.nhl.com/), so that when you Knit the 
+the link for your app [here](https://shiny.middlebury.edu:3838/clehner/Words/), so that when you Knit the 
 document a working hyperlink shows.
 
 Hints:
@@ -51,4 +51,54 @@ if(text == "blah1"){
 }
 value
 ```
+
+```{r}
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(stringr))
+suppressPackageStartupMessages(library(tm))
+suppressPackageStartupMessages(library(wordcloud))
+suppressPackageStartupMessages(library(SnowballC))
+```
+
+```{r}
+value <- 3
+if(value == 1){
+  value <- "words/Tale_of_Two_Cities"
+} else if (value  == 2) {
+  value <- "words/Ulysses"
+} else if (value  == 3){
+  value <- "words/The_Adventures_of_Sherlock_Holmes"
+}
+
+book <-
+  readLines(value, encoding="UTF-8") %>%
+  as.character()
+book <- book %>%
+  tolower() %>%
+  removeNumbers() %>%
+  removePunctuation() %>%
+  removeWords(stopwords("english")) %>%
+  stemDocument() %>%
+  stripWhitespace()
+
+book <- VectorSource(book) %>% 
+  Corpus()
+
+wordcloud(book, scale=c(5,0.5), max.words=25, random.order=FALSE,
+          rot.per=0.35, use.r.layout=FALSE, colors=brewer.pal(8, "BuPu"))
+```
+
+>There are differences in the use of words, clearly we would want to remove names, places etc to see the differences more clearly. I also ran into some issues uploading the shiny app to middleburys server but I got it to work.
+
+
+
+
+
+
+
+
+
+
+
+
 
